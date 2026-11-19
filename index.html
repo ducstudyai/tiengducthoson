@@ -58,7 +58,7 @@
   <header class="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white shadow-lg sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 py-3.5">
       <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-        <!-- Brand & Language Switcher -->
+        <!-- Brand & Mobile Language Switcher -->
         <div class="flex items-start sm:items-center justify-between gap-3">
           <div class="flex items-start sm:items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-extrabold text-lg shrink-0 shadow-md">
@@ -69,12 +69,12 @@
                 <h1 id="uiAppTitle" class="text-base sm:text-lg font-bold tracking-tight">Tiếng Đức Ngành Sơn Công Nghiệp</h1>
                 <span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-400/30">BG Wind GmbH • Kavelstorf / Rostock</span>
               </div>
-              <p id="uiAppSubtitle" class="text-xs text-slate-300 mt-0.5">2 Giọng AI Tự Nhiên: Chuẩn Đức & Vùng Rostock / Kavelstorf</p>
+              <p id="uiAppSubtitle" class="text-xs text-slate-300 mt-0.5">6 Giọng AI (Gemini TTS • Piper Thorsten Offline • Edge Neural)</p>
             </div>
           </div>
 
-          <!-- UI Language Switcher (VI / EN) -->
-          <div class="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-600 shrink-0 lg:hidden" title="Ngôn ngữ hiển thị / Display Language">
+          <!-- UI Language Switcher (VI / EN) - Mobile -->
+          <div class="flex items-center bg-slate-800 rounded-lg p-0.5 border border-slate-600 shrink-0 lg:hidden">
             <button onclick="setUILang('vi')" class="lang-btn-vi px-2.5 py-1 text-xs rounded-md font-bold bg-emerald-500 text-slate-950 transition cursor-pointer">VI</button>
             <button onclick="setUILang('en')" class="lang-btn-en px-2.5 py-1 text-xs rounded-md font-medium text-slate-300 hover:text-white transition cursor-pointer">EN</button>
           </div>
@@ -82,17 +82,13 @@
 
         <!-- Audio Controls + Desktop Language Switcher -->
         <div class="flex flex-wrap items-center gap-2 bg-slate-800/90 p-2 rounded-xl border border-slate-700/80">
-          <!-- 2-Voice Toggle Pill -->
-          <div class="flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-700">
-            <button id="voiceBtnHochdeutsch" onclick="setGlobalVoice('hochdeutsch')" class="px-2.5 py-1 text-xs rounded-md font-semibold bg-blue-600 text-white transition cursor-pointer">
-              Chuẩn Đức
-            </button>
-            <button id="voiceBtnRostock" onclick="setGlobalVoice('rostock')" class="px-2.5 py-1 text-xs rounded-md font-medium text-slate-300 hover:text-white transition cursor-pointer">
-              Vùng Rostock
-            </button>
+          <!-- 6-Voice Selector -->
+          <div class="flex items-center gap-1.5 flex-1 sm:flex-initial">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+            <select id="globalVoiceSelect" onchange="onGlobalVoiceChange()" class="bg-slate-900 text-xs font-medium text-slate-100 rounded-lg px-2.5 py-1.5 border border-slate-600 focus:outline-none focus:border-amber-400 max-w-[255px] truncate cursor-pointer"></select>
           </div>
 
-          <button id="testVoiceBtn" onclick="testSelectedVoice(this)" class="px-2.5 py-1.5 rounded-lg bg-slate-700 hover:bg-slate-600 text-amber-300 text-xs font-semibold transition flex items-center gap-1 shrink-0 cursor-pointer">
+          <button id="testVoiceBtn" onclick="testSelectedVoice(this)" class="px-2.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition flex items-center gap-1 shrink-0 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
             <span id="uiTestBtn">Nghe thử</span>
           </button>
@@ -105,13 +101,13 @@
           </div>
 
           <!-- Stop Button -->
-          <button onclick="stopAudio()" class="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center gap-1 transition cursor-pointer">
+          <button id="uiStopActionBtn" onclick="stopAudio()" class="px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center gap-1 transition cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
             <span id="uiStopBtn">Dừng</span>
           </button>
 
           <!-- Desktop Language Switcher (VI / EN) -->
-          <div class="hidden lg:flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-600 ml-1" title="Ngôn ngữ hiển thị / Display Language">
+          <div class="hidden lg:flex items-center bg-slate-900 rounded-lg p-0.5 border border-slate-600 ml-1">
             <button onclick="setUILang('vi')" class="lang-btn-vi px-2.5 py-1 text-xs rounded-md font-bold bg-emerald-500 text-slate-950 transition cursor-pointer">VI</button>
             <button onclick="setUILang('en')" class="lang-btn-en px-2.5 py-1 text-xs rounded-md font-medium text-slate-300 hover:text-white transition cursor-pointer">EN</button>
           </div>
@@ -127,7 +123,7 @@
           <span id="uiTabSentences">2. Mẫu câu xưởng (29)</span>
         </button>
         <button onclick="switchTab('dialogues')" id="tab-dialogues" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white flex items-center gap-1.5 shrink-0 transition cursor-pointer">
-          <span id="uiTabDialogues">3. Hội thoại tùy chọn giọng (4)</span>
+          <span id="uiTabDialogues">3. Hội thoại tùy chọn 6 giọng (4)</span>
         </button>
         <button onclick="switchTab('flashcards')" id="tab-flashcards" class="tab-btn px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium text-slate-300 hover:bg-white/10 hover:text-white flex items-center gap-1.5 shrink-0 transition cursor-pointer">
           <span id="uiTabFlashcards">4. Luyện thẻ Flashcard</span>
@@ -179,25 +175,22 @@
 
     <!-- ================= TAB 3: HỘI THOẠI / DIALOGUES ================= -->
     <section id="view-dialogues" class="hidden space-y-5">
-      <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-blue-200 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
         <div>
           <h2 id="uiDlgPanelTitle" class="text-sm font-bold text-slate-900">Tùy chọn giọng đọc cho 2 nhân vật hội thoại</h2>
-          <p id="uiDlgPanelDesc" class="text-xs text-slate-500 mt-0.5">Chọn giọng Chuẩn Đức hoặc Giọng vùng Rostock cho từng nhân vật trước khi nghe.</p>
+          <p id="uiDlgPanelDesc" class="text-xs text-slate-500 mt-0.5">Chọn tự do 2 trong 6 giọng (Gemini, Piper Offline, Edge) cho từng nhân vật.</p>
         </div>
-        <div class="flex flex-wrap items-center gap-3">
+        <div class="flex flex-wrap items-center gap-2.5">
           <div class="flex items-center gap-1.5 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200">
             <span id="uiRole1Label" class="text-xs font-bold text-blue-900">Nhân vật 1 (Đức):</span>
-            <select id="roleWorkerVoice" onchange="onDialogueRoleChange()" class="bg-white text-xs font-semibold text-slate-800 rounded-lg px-2 py-1 border border-blue-300 focus:outline-none cursor-pointer">
-              <option value="hochdeutsch" selected>Chuẩn Đức / Standard</option>
-              <option value="rostock">Vùng Rostock / Regional</option>
-            </select>
+            <select id="roleWorkerVoice" onchange="onDialogueRoleChange()" class="bg-white text-xs font-semibold text-slate-800 rounded-lg px-2 py-1 border border-blue-300 focus:outline-none max-w-[215px] truncate cursor-pointer"></select>
           </div>
+          <button onclick="swapDialogueVoices()" id="uiSwapBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-300 transition cursor-pointer">
+            ⇄ Đổi giọng 2 vai
+          </button>
           <div class="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
             <span id="uiRole2Label" class="text-xs font-bold text-amber-900">Nhân vật 2 (Meister / Kollege):</span>
-            <select id="rolePartnerVoice" onchange="onDialogueRoleChange()" class="bg-white text-xs font-semibold text-slate-800 rounded-lg px-2 py-1 border border-amber-300 focus:outline-none cursor-pointer">
-              <option value="rostock" selected>Vùng Rostock / Regional</option>
-              <option value="hochdeutsch">Chuẩn Đức / Standard</option>
-            </select>
+            <select id="rolePartnerVoice" onchange="onDialogueRoleChange()" class="bg-white text-xs font-semibold text-slate-800 rounded-lg px-2 py-1 border border-amber-300 focus:outline-none max-w-[215px] truncate cursor-pointer"></select>
           </div>
         </div>
       </div>
@@ -210,14 +203,7 @@
       <div class="bg-white p-3.5 rounded-2xl shadow-sm border border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
         <div class="flex items-center gap-2">
           <label id="uiFcDeckLabel" class="text-xs font-semibold text-slate-600">Bộ thẻ:</label>
-          <select id="fcDeckSelect" onchange="initFlashcards()" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer">
-            <option value="all_vocab">Tất cả Từ vựng / All Vocabulary (56)</option>
-            <option value="1.1">1.1 Vật liệu & Bề mặt / Materials (16)</option>
-            <option value="1.2">1.2 Dụng cụ & Thiết bị / Tools (17)</option>
-            <option value="1.3">1.3 Đồ bảo hộ PSA / Safety Gear (9)</option>
-            <option value="1.4">1.4 Động từ & Tính từ / Verbs & Adj (14)</option>
-            <option value="all_sent">Tất cả Mẫu câu / All Phrases (29)</option>
-          </select>
+          <select id="fcDeckSelect" onchange="initFlashcards()" class="bg-slate-50 border border-slate-200 text-xs font-semibold rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer"></select>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="shuffleFlashcards()" id="uiFcShuffleBtn" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition cursor-pointer">Trộn thẻ</button>
@@ -230,7 +216,7 @@
           <div class="absolute inset-0 backface-hidden bg-white rounded-3xl shadow-md border border-slate-200/90 p-6 sm:p-8 flex flex-col justify-between">
             <div class="flex items-center justify-between">
               <span id="fcFrontBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">Danh từ</span>
-              <button onclick="event.stopPropagation(); speakCurrentFlashcard(this)" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+              <button id="uiFcSpeakActionBtn" onclick="event.stopPropagation(); speakCurrentFlashcard(this)" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                 <span id="uiFcSpeakBtn">Phát âm</span>
               </button>
@@ -284,23 +270,98 @@
     const SENTENCES_DATA = [{"id": 1, "cat": "2.1", "de": "Was ist meine Aufgabe heute?", "vi": "Hôm nay nhiệm vụ của tôi là gì?", "en": "What is my task today?"}, {"id": 2, "cat": "2.1", "de": "Welchen Bereich soll ich zuerst abkleben?", "vi": "Tôi nên dán băng keo che khu vực nào trước?", "en": "Which area should I mask off first?"}, {"id": 3, "cat": "2.1", "de": "Welche Farbe / Grundierung nehmen wir dafür?", "vi": "Chúng ta dùng loại sơn / sơn lót nào cho phần này?", "en": "Which paint / primer are we using for this?"}, {"id": 4, "cat": "2.1", "de": "In welchem Verhältnis muss ich die Farbe und den Härter mischen?", "vi": "Tôi phải pha sơn và chất đóng rắn theo tỷ lệ nào?", "en": "In what ratio do I need to mix the paint and the hardener?"}, {"id": 5, "cat": "2.1", "de": "Muss ich die Oberfläche vorher noch schleifen oder entfetten?", "vi": "Tôi có cần chà nhám hay tẩy dầu mỡ bề mặt này trước không?", "en": "Do I still need to sand or degrease the surface beforehand?"}, {"id": 6, "cat": "2.1", "de": "Wie viele Schichten müssen wir streichen?", "vi": "Chúng ta phải sơn mấy lớp?", "en": "How many coats do we need to apply?"}, {"id": 7, "cat": "2.1", "de": "Wie hoch muss die Schichtdicke sein?", "vi": "Độ dày màng sơn yêu cầu là bao nhiêu?", "en": "How thick must the coating film be?"}, {"id": 8, "cat": "2.1", "de": "Wie lange muss die Farbe trocknen, bevor die nächste Schicht draufkommt?", "vi": "Sơn này cần khô trong bao lâu trước khi sơn lớp tiếp theo?", "en": "How long must the paint dry before the next coat goes on?"}, {"id": 9, "cat": "2.1", "de": "Wo genau soll ich die Markierung setzen?", "vi": "Tôi nên đánh dấu vị trí chính xác ở đâu?", "en": "Where exactly should I place the marking?"}, {"id": 10, "cat": "2.2", "de": "Ich bin mit dem Abkleben fertig.", "vi": "Tôi đã dán băng keo che chắn xong rồi.", "en": "I am finished with masking off."}, {"id": 11, "cat": "2.2", "de": "Die Oberfläche ist sauber und bereit zum Streichen.", "vi": "Bề mặt đã sạch và sẵn sàng để sơn.", "en": "The surface is clean and ready for painting."}, {"id": 12, "cat": "2.2", "de": "Die erste Schicht ist fertig.", "vi": "Lớp sơn đầu tiên đã xong.", "en": "The first coat is finished."}, {"id": 13, "cat": "2.2", "de": "Die Farbe ist leer. Wo finde ich neue?", "vi": "Hết sơn rồi. Tôi có thể lấy sơn mới ở đâu?", "en": "The paint is empty. Where can I find new paint?"}, {"id": 14, "cat": "2.2", "de": "Wir brauchen mehr Abdeckband, Farbrollen und Lösungsmittel.", "vi": "Chúng ta cần thêm băng keo che, con lăn sơn và dung môi.", "en": "We need more masking tape, paint rollers, and solvent."}, {"id": 15, "cat": "2.2", "de": "Ich habe die Schichtdicke gemessen, sie liegt bei 120 Mikrometer.", "vi": "Tôi đã đo độ dày màng sơn, nó đạt 120 micromet.", "en": "I measured the coating thickness; it is at 120 micrometers."}, {"id": 16, "cat": "2.2", "de": "Die Schichtdicke passt.", "vi": "Độ dày lớp sơn đã đạt chuẩn.", "en": "The coating thickness is good / within spec."}, {"id": 17, "cat": "2.3", "de": "Hier ist noch Rost / Öl auf der Oberfläche.", "vi": "Chỗ này trên bề mặt vẫn còn gỉ sét / dầu mỡ.", "en": "There is still rust / oil on the surface here."}, {"id": 18, "cat": "2.3", "de": "Die Farbe deckt hier noch nicht richtig, ich muss noch einmal drüberrollen.", "vi": "Sơn chỗ này vẫn chưa phủ đều, tôi phải lăn lại một lượt nữa.", "en": "The paint isn't covering properly here yet; I need to roll over it once more."}, {"id": 19, "cat": "2.3", "de": "Hier gibt es Nasen / Läufer in der Farbe. Ich schleife das kurz an und bessere es aus.", "vi": "Chỗ này sơn bị chảy giọt. Tôi sẽ chà nhẹ và dặm lại.", "en": "There are paint runs / sags here. I'll lightly sand it and touch it up."}, {"id": 20, "cat": "2.3", "de": "Die Luftfeuchtigkeit ist heute ziemlich hoch. Können wir trotzdem streichen?", "vi": "Độ ẩm không khí hôm nay khá cao. Chúng ta vẫn sơn được chứ?", "en": "The air humidity is quite high today. Can we still paint?"}, {"id": 21, "cat": "2.3", "de": "Mein Filter für die Atemschutzmaske ist voll, ich brauche einen neuen.", "vi": "Phin lọc mặt nạ phòng độc của tôi đã đầy, tôi cần cái mới.", "en": "My respirator filter is full; I need a new one."}, {"id": 22, "cat": "2.3", "de": "Vorsicht, frisch gestrichen! Nicht berühren!", "vi": "Cẩn thận, sơn mới quét! Không chạm vào!", "en": "Caution, wet paint! Do not touch!"}, {"id": 23, "cat": "2.3", "de": "Können Sie das bitte kurz kontrollieren?", "vi": "Anh/Chị có thể kiểm tra giúp tôi chỗ này một chút được không?", "en": "Could you please check this briefly for me?"}, {"id": 24, "cat": "2.4", "de": "Guten Morgen! / Schönen Feierabend!", "vi": "Chào buổi sáng! / Chúc tan ca vui vẻ!", "en": "Good morning! / Have a nice evening (after work)!"}, {"id": 25, "cat": "2.4", "de": "Können Sie das bitte etwas langsamer sagen?", "vi": "Anh/Chị có thể nói chậm lại một chút được không?", "en": "Could you please say that a little more slowly?"}, {"id": 26, "cat": "2.4", "de": "Ich habe das nicht ganz verstanden. Können Sie es mir kurz zeigen?", "vi": "Tôi chưa hiểu rõ lắm. Anh/Chị có thể làm mẫu ngắn gọn cho tôi xem được không?", "en": "I didn't quite understand that. Could you briefly show me?"}, {"id": 27, "cat": "2.4", "de": "Alles klar, mach ich sofort.", "vi": "Rõ rồi, tôi sẽ làm ngay.", "en": "All clear, I'll do it right away."}, {"id": 28, "cat": "2.4", "de": "Kannst du mir bitte kurz helfen, das Bauteil zu drehen / abzudecken?", "vi": "Bạn giúp tôi một tay xoay / che phủ cấu kiện này được không?", "en": "Can you briefly help me turn / cover this component?"}, {"id": 29, "cat": "2.4", "de": "Wann machen wir Frühstückspause / Mittagspause?", "vi": "Khi nào chúng ta nghỉ ăn sáng / nghỉ trưa?", "en": "When do we take our breakfast break / lunch break?"}];
     const DIALOGUES_DATA = [{"id": 1, "title": "Hội thoại 1: Nhận nhiệm vụ đầu ca và kiểm tra bề mặt", "subtitle": "Arbeitsbeginn & Oberflächenprüfung", "context": "Đầu giờ sáng tại xưởng Kavelstorf, công nhân (Đức) hỏi tổ trưởng (Meister) về công việc trong ngày.", "lines": [{"id": "dlg_1_1", "speaker": "Đức", "role": "worker", "de": "Guten Morgen, Meister! Was ist heute meine Aufgabe?", "vi": "Chào buổi sáng tổ trưởng! Hôm nay nhiệm vụ của em là gì ạ?", "en": "Good morning, Meister! What is my task today?"}, {"id": "dlg_1_2", "speaker": "Meister", "role": "meister", "de": "Guten Morgen, Đức! Heute musst du das Stahlbeton-Element dort hinten für die Grundierung vorbereiten.", "vi": "Chào buổi sáng Đức! Hôm nay cậu phải chuẩn bị cấu kiện thép cốt bê tông ở đằng kia để sơn lót.", "en": "Good morning, Đức! Today you need to prepare the reinforced concrete element over there for priming."}, {"id": "dlg_1_3", "speaker": "Đức", "role": "worker", "de": "Alles klar. Soll ich die Ränder und Schrauben zuerst mit Abdeckband abkleben?", "vi": "Em rõ rồi. Em có nên dán băng keo che các mép và ốc vít trước không ạ?", "en": "All clear. Should I mask off the edges and bolts with masking tape first?"}, {"id": "dlg_1_4", "speaker": "Meister", "role": "meister", "de": "Ja, genau. Aber prüfe vorher die Oberfläche. Wenn noch Staub oder Fett drauf ist, musst du sie zuerst reinigen.", "vi": "Đúng vậy. Nhưng hãy kiểm tra bề mặt trước. Nếu vẫn còn bụi hoặc dầu mỡ trên đó, cậu phải làm sạch trước đã.", "en": "Yes, exactly. But check the surface beforehand. If there is still dust or grease on it, you must clean it first."}, {"id": "dlg_1_5", "speaker": "Đức", "role": "worker", "de": "Verstanden. Ich sehe dort an der Schweißnaht noch etwas Rost. Soll ich den abschleifen?", "vi": "Em hiểu rồi. Em thấy ở chỗ mối hàn kia vẫn còn một ít gỉ sét. Em có nên chà nhám chỗ đó không ạ?", "en": "Understood. I see a little rust on the weld seam over there. Should I sand that off?"}, {"id": "dlg_1_6", "speaker": "Meister", "role": "meister", "de": "Ja, bitte gründlich abschleifen und danach sauber wischen. Danach kannst du mit dem Abkleben anfangen.", "vi": "Có, hãy chà nhám thật kỹ và lau sạch sau đó. Xong xuôi thì cậu có thể bắt đầu dán băng keo che chắn.", "en": "Yes, please sand it thoroughly and wipe it clean afterward. After that, you can start masking off."}, {"id": "dlg_1_7", "speaker": "Đức", "role": "worker", "de": "Super, mach ich sofort!", "vi": "Tuyệt vời, em làm ngay đây ạ!", "en": "Great, I'll do it right away!"}], "title_en": "Dialogue 1: Receiving the Shift Task & Surface Inspection", "context_en": "Early morning in the Kavelstorf workshop, worker (Đức) asks the supervisor (Meister) about the day's work."}, {"id": 2, "title": "Hội thoại 2: Pha sơn và lăn sơn lớp lót", "subtitle": "Farbe anrühren & Grundierung rollen", "context": "Đã xử lý xong bề mặt, Đức hỏi tổ trưởng về loại sơn và tỷ lệ pha.", "lines": [{"id": "dlg_2_1", "speaker": "Đức", "role": "worker", "de": "Ich bin mit dem Reinigen und Abkleben fertig. Welche Grundierung nehmen wir für dieses Teil?", "vi": "Em đã làm sạch và dán băng keo xong rồi ạ. Chúng ta dùng loại sơn lót nào cho bộ phận này vậy anh?", "en": "I'm finished with cleaning and masking off. Which primer do we use for this part?"}, {"id": "dlg_2_2", "speaker": "Meister", "role": "meister", "de": "Wir nehmen die graue Zwei-Komponenten-Grundierung da drüben.", "vi": "Chúng ta dùng loại sơn lót 2 thành phần màu xám ở đằng kia.", "en": "We use the gray two-component primer over there."}, {"id": "dlg_2_3", "speaker": "Đức", "role": "worker", "de": "In welchem Verhältnis muss ich die Farbe und den Härter mischen?", "vi": "Em phải pha sơn và chất đóng rắn theo tỷ lệ nào ạ?", "en": "In what ratio do I need to mix the paint and the hardener?"}, {"id": "dlg_2_4", "speaker": "Meister", "role": "meister", "de": "Vier zu eins. Vier Teile Farbe und ein Teil Härter. Rühre es mit dem Rührgerät mindestens drei Minuten gut durch.", "vi": "4:1. Bốn phần sơn và một phần chất đóng rắn. Dùng máy khuấy trộn đều ít nhất ba phút nhé.", "en": "Four to one. Four parts paint and one part hardener. Stir it well with the mixer for at least three minutes."}, {"id": "dlg_2_5", "speaker": "Đức", "role": "worker", "de": "Wie viele Schichten müssen wir streichen?", "vi": "Chúng ta phải sơn mấy lớp ạ?", "en": "How many coats do we need to apply?"}, {"id": "dlg_2_6", "speaker": "Meister", "role": "meister", "de": "Erstmal eine dicke Schicht mit der Farbrolle. Achte darauf, dass die Schichtdicke bei mindestens 100 Mikrometer liegt.", "vi": "Trước tiên lăn một lớp dày bằng con lăn. Chú ý đảm bảo độ dày màng sơn đạt ít nhất 100 micromet.", "en": "First, one thick coat with the paint roller. Make sure the coating thickness is at least 100 micrometers."}, {"id": "dlg_2_7", "speaker": "Đức", "role": "worker", "de": "Alles klar. Ich fange jetzt an.", "vi": "Em rõ rồi. Em bắt đầu làm ngay đây.", "en": "All clear. I'm starting now."}], "title_en": "Dialogue 2: Mixing Paint & Rolling the Primer Coat", "context_en": "After preparing the surface, Đức asks the supervisor about the paint type and mixing ratio."}, {"id": 3, "title": "Hội thoại 3: Báo cáo hoàn thành, đo độ dày màng sơn và xử lý lỗi nhỏ", "subtitle": "Qualitätskontrolle & Ausbesserung", "context": "Sau khi lăn xong lớp sơn, Đức mời tổ trưởng đến kiểm tra chất lượng.", "lines": [{"id": "dlg_3_1", "speaker": "Đức", "role": "worker", "de": "Entschuldigung, haben Sie kurz Zeit? Ich bin mit der ersten Schicht fertig. Können Sie das bitte kontrollieren?", "vi": "Xin lỗi, anh có chút thời gian không ạ? Em đã sơn xong lớp đầu tiên rồi. Anh có thể kiểm tra giúp em được không ạ?", "en": "Excuse me, do you have a moment? I'm finished with the first coat. Could you please inspect it?"}, {"id": "dlg_3_2", "speaker": "Meister", "role": "meister", "de": "Klar, schauen wir mal. Die Fläche sieht insgesamt sehr gleichmäßig aus. Hast du die Schichtdicke schon gemessen?", "vi": "Được chứ, để xem nào. Nhìn chung bề mặt trông rất đều màu. Cậu đã đo độ dày màng sơn chưa?", "en": "Sure, let's take a look. Overall, the surface looks very even. Have you measured the coating thickness yet?"}, {"id": "dlg_3_3", "speaker": "Đức", "role": "worker", "de": "Ja, ich habe an fünf Stellen gemessen. Überall sind es zwischen 110 und 125 Mikrometer.", "vi": "Dạ rồi, em đã đo ở 5 điểm. Chỗ nào cũng đạt từ 110 đến 125 micromet ạ.", "en": "Yes, I measured at five spots. Everywhere is between 110 and 125 micrometers."}, {"id": "dlg_3_4", "speaker": "Meister", "role": "meister", "de": "Sehr gut! Aber schau mal hier unten an der Ecke: Hier deckt die Farbe noch nicht ganz und dort ist ein kleiner Läufer.", "vi": "Rất tốt! Nhưng nhìn chỗ góc dưới này xem: Chỗ này sơn vẫn chưa phủ kín hẳn và ở kia có một vết sơn chảy nhỏ.", "en": "Very good! But look down here at the corner: the paint doesn't quite cover here yet, and there is a small run over there."}, {"id": "dlg_3_5", "speaker": "Đức", "role": "worker", "de": "Oh, das habe ich übersehen. Kann ich das jetzt gleich mit dem Pinsel ausbessern?", "vi": "Ồ, chỗ đó em sơ suất không để ý. Em có thể dùng cọ dặm lại ngay bây giờ được không ạ?", "en": "Oh, I missed that. Can I touch it up right now with the paintbrush?"}, {"id": "dlg_3_6", "speaker": "Meister", "role": "meister", "de": "Den Läufer musst du kurz antrocknen lassen, dann leicht anschleifen und überrollen. Die Ecke kannst du sofort mit dem Pinsel nachstreichen.", "vi": "Chỗ sơn chảy cậu phải đợi nó se khô một chút, rồi chà nhám nhẹ và lăn đè lên. Còn chỗ góc thì có thể dùng cọ quét dặm lại ngay.", "en": "You have to let the run dry briefly, then lightly sand it and roll over it. You can touch up the corner right away with the brush."}, {"id": "dlg_3_7", "speaker": "Đức", "role": "worker", "de": "Verstanden, danke für den Hinweis! Wie lange muss die Schicht trocknen, bis wir weitermachen können?", "vi": "Em hiểu rồi, cảm ơn anh đã chỉ ra! Lớp sơn này cần khô trong bao lâu để chúng ta có thể làm tiếp ạ?", "en": "Understood, thanks for pointing that out! How long does the coat need to dry before we can continue?"}, {"id": "dlg_3_8", "speaker": "Meister", "role": "meister", "de": "Bei dieser Temperatur braucht sie etwa vier Stunden.", "vi": "Với nhiệt độ này thì nó cần khoảng 4 tiếng.", "en": "At this temperature, it needs about four hours."}], "title_en": "Dialogue 3: Reporting Completion, Measuring Thickness & Touch-Ups", "context_en": "After rolling the first coat, Đức asks the supervisor to inspect the quality."}, {"id": 4, "title": "Hội thoại 4: Yêu cầu cấp thêm vật tư & Thay đồ bảo hộ", "subtitle": "Materialnachschub & Arbeitssicherheit", "context": "Đang làm việc thì hết vật tư và phin lọc mặt nạ phòng độc bị nghẹt.", "lines": [{"id": "dlg_4_1", "speaker": "Đức", "role": "worker", "de": "Entschuldigung, die Farbe im Eimer ist fast leer. Wo finde ich einen neuen Eimer?", "vi": "Xin lỗi, sơn trong xô gần hết rồi ạ. Em có thể lấy xô mới ở đâu vậy anh?", "en": "Excuse me, the paint in the bucket is almost empty. Where can I find a new bucket?"}, {"id": "dlg_4_2", "speaker": "Kollege", "role": "kollege", "de": "Im Materiallager in Halle 2, direkt rechts neben der Tür. Brauchst du sonst noch etwas?", "vi": "Ở kho vật tư trong xưởng số 2, ngay bên phải cạnh cửa ra vào ấy. Cậu có cần thêm gì nữa không?", "en": "In the material warehouse in Hall 2, right next to the door on the right. Do you need anything else?"}, {"id": "dlg_4_3", "speaker": "Đức", "role": "worker", "de": "Ja, wir brauchen auch noch zwei neue Farbrollen und mehr Abdeckband. Außerdem ist der Filter von meiner Atemschutzmaske voll.", "vi": "Có, chúng ta cũng cần thêm hai con lăn sơn mới và thêm băng keo che nữa. Ngoài ra phin lọc mặt nạ phòng độc của tôi cũng đầy rồi.", "en": "Yes, we also need two new paint rollers and more masking tape. Besides, the filter on my respirator mask is full."}, {"id": "dlg_4_4", "speaker": "Kollege", "role": "kollege", "de": "Neue Filter und Arbeitshandschuhe bekommst du beim Sicherheitsbeauftragten im Büro vorne. Ich hole schnell die Farbe und das Abdeckband aus dem Lager.", "vi": "Phin lọc mới và găng tay bảo hộ thì cậu ra chỗ nhân viên phụ trách an toàn ở văn phòng phía trước để lấy. Tôi sẽ đi lấy nhanh sơn và băng keo ở kho.", "en": "You can get new filters and work gloves from the safety officer in the front office. I'll quickly fetch the paint and masking tape from the warehouse."}, {"id": "dlg_4_5", "speaker": "Đức", "role": "worker", "de": "Super, vielen Dank für deine Hilfe!", "vi": "Tuyệt quá, cảm ơn sự giúp đỡ của cậu rất nhiều!", "en": "Awesome, thank you very much for your help!"}], "title_en": "Dialogue 4: Requesting Supplies & Replacing PPE", "context_en": "During work, paint runs low and the respirator filter is clogged."}];
 
-    // ==================== SONG NGỮ GIAO DIỆN (VI / EN) ====================
+    // ==================== DANH MỤC 6 GIỌNG ĐỌC ====================
+    // Mặc định chọn 'gemini_hochdeutsch' vì phát âm tiếng Đức tự nhiên và chuẩn xác nhất
+    const VOICE_CATALOG = [
+      {
+        key: "gemini_hochdeutsch",
+        group_vi: "1. Google Gemini TTS (Tự nhiên nhất — Mặc định)",
+        group_en: "1. Google Gemini TTS (Most Natural — Default)",
+        label_vi: "Gemini — Chuẩn Đức (Nữ Aoede) ★",
+        label_en: "Gemini — Standard German (Female Aoede) ★",
+        short_vi: "Gemini Chuẩn Đức",
+        short_en: "Gemini Standard",
+        fallback_edge: "hochdeutsch",
+        sample: "Guten Tag! Hier sprechen wir klares Hochdeutsch für die Arbeit bei BG Wind."
+      },
+      {
+        key: "gemini_rostock",
+        group_vi: "1. Google Gemini TTS (Tự nhiên nhất — Mặc định)",
+        group_en: "1. Google Gemini TTS (Most Natural — Default)",
+        label_vi: "Gemini — Vùng Rostock (Nam Orus)",
+        label_en: "Gemini — Rostock Accent (Male Orus)",
+        short_vi: "Gemini Vùng Rostock",
+        short_en: "Gemini Rostock",
+        fallback_edge: "rostock",
+        sample: "Moin! Ich bin Meister Klaus aus Rostock. Willkommen bei BG Wind in Kavelstorf."
+      },
+      {
+        key: "piper_hochdeutsch",
+        group_vi: "2. Piper Thorsten-Voice Offline (Bản xứ Đức)",
+        group_en: "2. Piper Thorsten-Voice Offline (Native German)",
+        label_vi: "Piper Thorsten — Chuẩn Đức (High)",
+        label_en: "Piper Thorsten — Standard German (High)",
+        short_vi: "Piper Chuẩn Đức",
+        short_en: "Piper Standard",
+        fallback_edge: "hochdeutsch",
+        sample: "Guten Tag! Das ist die deutsche Standardstimme von Thorsten."
+      },
+      {
+        key: "piper_rostock",
+        group_vi: "2. Piper Thorsten-Voice Offline (Bản xứ Đức)",
+        group_en: "2. Piper Thorsten-Voice Offline (Native German)",
+        label_vi: "Piper Thorsten — Vùng Rostock (Trầm)",
+        label_en: "Piper Thorsten — Rostock Accent (Deep)",
+        short_vi: "Piper Vùng Rostock",
+        short_en: "Piper Rostock",
+        fallback_edge: "rostock",
+        sample: "Moin! Hier ist die norddeutsche Werkstattstimme für Rostock und Kavelstorf."
+      },
+      {
+        key: "hochdeutsch",
+        group_vi: "3. Microsoft Edge Neural TTS",
+        group_en: "3. Microsoft Edge Neural TTS",
+        label_vi: "Edge Neural — Chuẩn Đức (Katja)",
+        label_en: "Edge Neural — Standard German (Katja)",
+        short_vi: "Edge Chuẩn Đức",
+        short_en: "Edge Standard",
+        fallback_edge: null,
+        sample: "Guten Tag! Hier sprechen wir klares Hochdeutsch für die Arbeit."
+      },
+      {
+        key: "rostock",
+        group_vi: "3. Microsoft Edge Neural TTS",
+        group_en: "3. Microsoft Edge Neural TTS",
+        label_vi: "Edge Neural — Vùng Rostock (Conrad)",
+        label_en: "Edge Neural — Rostock Accent (Conrad)",
+        short_vi: "Edge Vùng Rostock",
+        short_en: "Edge Rostock",
+        fallback_edge: null,
+        sample: "Moin! Ich bin Meister Klaus aus Rostock. Willkommen bei BG Wind."
+      }
+    ];
+
     let uiLang = 'vi'; // 'vi' | 'en'
+    let globalVoice = 'gemini_hochdeutsch';
+    let workerVoice = 'gemini_hochdeutsch';
+    let partnerVoice = 'gemini_rostock';
+    let playbackSpeed = 1.0;
 
     const UI_TEXT = {
       vi: {
+        pageTitle: "Tiếng Đức Ngành Sơn Công Nghiệp — BG Wind GmbH",
         appTitle: "Tiếng Đức Ngành Sơn Công Nghiệp",
-        appSubtitle: "2 Giọng AI Tự Nhiên: Chuẩn Đức & Vùng Rostock / Kavelstorf",
-        voiceHoch: "Chuẩn Đức",
-        voiceRostock: "Vùng Rostock",
+        appSubtitle: "6 Giọng AI (Gemini TTS • Piper Thorsten Offline • Edge Neural)",
         testBtn: "Nghe thử",
+        testBtnTitle: "Nghe thử giọng đang chọn",
         speedSlow: "Chậm 0.75x",
         speedNormal: "Chuẩn 1.0x",
         speedFast: "Nhanh 1.25x",
         stopBtn: "Dừng",
+        stopBtnTitle: "Dừng phát âm thanh",
         tabVocab: "1. Từ vựng (56)",
         tabSentences: "2. Mẫu câu xưởng (29)",
-        tabDialogues: "3. Hội thoại tùy chọn giọng (4)",
+        tabDialogues: "3. Hội thoại tùy chọn 6 giọng (4)",
         tabFlashcards: "4. Luyện thẻ Flashcard",
         vocabPlaceholder: "Tìm từ tiếng Đức, nghĩa tiếng Việt / tiếng Anh, từ liên quan...",
         vCatAll: "Tất cả (56)",
@@ -310,6 +371,8 @@
         vCat4: "1.4 Động từ & Tính từ (14)",
         noVocabFound: "Không tìm thấy từ vựng phù hợp.",
         relatedLabel: "Từ liên quan:",
+        playWordTitle: "Nghe phát âm từ",
+        playExTitle: "Nghe câu ví dụ",
         sentPlaceholder: "Tìm mẫu câu tiếng Đức, tiếng Việt hoặc tiếng Anh...",
         sCatAll: "Tất cả (29)",
         sCat1: "2.1 Nhận việc & Quy trình (9)",
@@ -317,6 +380,7 @@
         sCat3: "2.3 Lỗi kỹ thuật & An toàn (7)",
         sCat4: "2.4 Giao tiếp xưởng (6)",
         noSentFound: "Không tìm thấy mẫu câu phù hợp.",
+        playSentTitle: "Nghe mẫu câu",
         sentCatNames: {
           '2.1': '2.1 Nhận việc & Quy trình',
           '2.2': '2.2 Báo cáo & Vật tư',
@@ -324,12 +388,22 @@
           '2.4': '2.4 Giao tiếp xưởng'
         },
         dlgPanelTitle: "Tùy chọn giọng đọc cho 2 nhân vật hội thoại",
-        dlgPanelDesc: "Chọn giọng Chuẩn Đức hoặc Giọng vùng Rostock cho từng nhân vật trước khi nghe.",
+        dlgPanelDesc: "Chọn tự do 2 trong 6 giọng (Gemini, Piper Offline, Edge) cho từng nhân vật.",
         role1Label: "Nhân vật 1 (Đức):",
         role2Label: "Nhân vật 2 (Meister / Kollege):",
+        swapBtn: "⇄ Đổi giọng 2 vai",
         playFullDlg: "Nghe cả hội thoại",
-        voiceBadge: { hochdeutsch: "Giọng Chuẩn Đức", rostock: "Giọng vùng Rostock" },
+        playLineTitle: "Nghe câu thoại này",
+        speakerNames: { worker: "Đức", meister: "Meister", kollege: "Kollege" },
         fcDeckLabel: "Bộ thẻ:",
+        fcDecks: [
+          { val: "all_vocab", label: "Tất cả Từ vựng (56 thẻ)" },
+          { val: "1.1", label: "1.1 Vật liệu & Bề mặt (16 thẻ)" },
+          { val: "1.2", label: "1.2 Dụng cụ & Thiết bị (17 thẻ)" },
+          { val: "1.3", label: "1.3 Đồ bảo hộ PSA (9 thẻ)" },
+          { val: "1.4", label: "1.4 Động từ & Tính từ (14 thẻ)" },
+          { val: "all_sent", label: "Tất cả Mẫu câu xưởng (29 thẻ)" }
+        ],
         fcShuffle: "Trộn thẻ",
         fcSpeak: "Phát âm",
         fcFlipFront: "Chạm vào thẻ để lật xem nghĩa & ví dụ",
@@ -342,23 +416,26 @@
         fcNext: "Thẻ tiếp theo →",
         fcSentBadge: "Mẫu câu xưởng",
         toastShuffled: "Đã xáo trộn bộ thẻ!",
-        toastNoAudio: "Chưa tìm thấy thư mục 'audio/'. Hãy chạy file tao_audio.py trên máy tính trước."
+        toastSwapped: "Đã hoán đổi giọng đọc của 2 nhân vật!",
+        toastFallbackEdge: "Chưa có file giọng mới này — đang phát tạm giọng Edge có sẵn. Hãy chạy tao_audio.py để tạo.",
+        toastNoAudio: "Không tìm thấy file âm thanh. Hãy chạy file tao_audio.py trên máy tính trước."
       },
       en: {
+        pageTitle: "German for Industrial Painters — BG Wind GmbH",
         appTitle: "German for Industrial Painters",
-        appSubtitle: "2 Natural AI Voices: Standard German & Rostock / Kavelstorf Dialect",
-        voiceHoch: "Standard German",
-        voiceRostock: "Rostock Accent",
+        appSubtitle: "6 AI Voices (Gemini TTS • Piper Thorsten Offline • Edge Neural)",
         testBtn: "Preview Voice",
+        testBtnTitle: "Preview selected voice",
         speedSlow: "Slow 0.75x",
         speedNormal: "Normal 1.0x",
         speedFast: "Fast 1.25x",
         stopBtn: "Stop",
+        stopBtnTitle: "Stop audio playback",
         tabVocab: "1. Vocabulary (56)",
         tabSentences: "2. Workshop Phrases (29)",
-        tabDialogues: "3. Custom Voice Dialogues (4)",
+        tabDialogues: "3. 6-Voice Custom Dialogues (4)",
         tabFlashcards: "4. Flashcards",
-        vocabPlaceholder: "Search German words, English / Vietnamese meanings...",
+        vocabPlaceholder: "Search German words, English meanings, or related terms...",
         vCatAll: "All (56)",
         vCat1: "1.1 Materials & Surfaces (16)",
         vCat2: "1.2 Tools & Equipment (17)",
@@ -366,26 +443,39 @@
         vCat4: "1.4 Verbs & Adjectives (14)",
         noVocabFound: "No matching vocabulary found.",
         relatedLabel: "Related words:",
-        sentPlaceholder: "Search German, English, or Vietnamese phrases...",
+        playWordTitle: "Play word pronunciation",
+        playExTitle: "Play example sentence",
+        sentPlaceholder: "Search German or English workshop phrases...",
         sCatAll: "All (29)",
         sCat1: "2.1 Tasks & Procedures (9)",
         sCat2: "2.2 Progress & Supplies (7)",
         sCat3: "2.3 Defects & Safety (7)",
         sCat4: "2.4 Daily Workshop Talk (6)",
         noSentFound: "No matching phrases found.",
+        playSentTitle: "Play phrase",
         sentCatNames: {
           '2.1': '2.1 Tasks & Procedures',
           '2.2': '2.2 Progress & Supplies',
           '2.3': '2.3 Defects & Safety',
           '2.4': '2.4 Daily Workshop Talk'
         },
-        dlgPanelTitle: "Customize Voices for Dialogue Characters",
-        dlgPanelDesc: "Assign Standard German or Rostock Accent to each speaker before playing.",
-        role1Label: "Speaker 1 (Đức):",
-        role2Label: "Speaker 2 (Meister / Kollege):",
+        dlgPanelTitle: "Customize Voices for Dialogue Speakers",
+        dlgPanelDesc: "Freely assign any 2 of the 6 voices (Gemini, Piper Offline, Edge) to the speakers.",
+        role1Label: "Speaker 1 (Duc):",
+        role2Label: "Speaker 2 (Supervisor / Colleague):",
+        swapBtn: "⇄ Swap Speaker Voices",
         playFullDlg: "Play Full Dialogue",
-        voiceBadge: { hochdeutsch: "Standard German", rostock: "Rostock Accent" },
+        playLineTitle: "Play this dialogue line",
+        speakerNames: { worker: "Duc", meister: "Supervisor (Meister)", kollege: "Colleague" },
         fcDeckLabel: "Deck:",
+        fcDecks: [
+          { val: "all_vocab", label: "All Vocabulary (56 cards)" },
+          { val: "1.1", label: "1.1 Materials & Surfaces (16 cards)" },
+          { val: "1.2", label: "1.2 Tools & Equipment (17 cards)" },
+          { val: "1.3", label: "1.3 Safety Gear / PPE (9 cards)" },
+          { val: "1.4", label: "1.4 Verbs & Adjectives (14 cards)" },
+          { val: "all_sent", label: "All Workshop Phrases (29 cards)" }
+        ],
         fcShuffle: "Shuffle",
         fcSpeak: "Pronounce",
         fcFlipFront: "Tap card to flip for meaning & example",
@@ -398,16 +488,45 @@
         fcNext: "Next →",
         fcSentBadge: "Workshop Phrase",
         toastShuffled: "Deck shuffled!",
-        toastNoAudio: "Folder 'audio/' not found. Run tao_audio.py on your computer first."
+        toastSwapped: "Swapped voices for both speakers!",
+        toastFallbackEdge: "New voice file not found yet — playing existing Edge audio. Run tao_audio.py to generate.",
+        toastNoAudio: "Audio file not found. Please run tao_audio.py on your computer first."
       }
     };
+
+    function populateVoiceSelect(selectEl, selectedVal) {
+      const groups = {};
+      VOICE_CATALOG.forEach(v => {
+        const gName = uiLang === 'vi' ? v.group_vi : v.group_en;
+        if (!groups[gName]) groups[gName] = [];
+        groups[gName].push(v);
+      });
+
+      selectEl.innerHTML = Object.entries(groups).map(([gLabel, items]) => `
+        <optgroup label="${gLabel}">
+          ${items.map(v => `<option value="${v.key}" ${v.key === selectedVal ? 'selected' : ''}>${uiLang === 'vi' ? v.label_vi : v.label_en}</option>`).join('')}
+        </optgroup>
+      `).join('');
+    }
+
+    function refreshAllDropdowns() {
+      populateVoiceSelect(document.getElementById('globalVoiceSelect'), globalVoice);
+      populateVoiceSelect(document.getElementById('roleWorkerVoice'), workerVoice);
+      populateVoiceSelect(document.getElementById('rolePartnerVoice'), partnerVoice);
+
+      const fcSelect = document.getElementById('fcDeckSelect');
+      const currentDeckVal = fcSelect.value || 'all_vocab';
+      fcSelect.innerHTML = UI_TEXT[uiLang].fcDecks.map(d =>
+        `<option value="${d.val}" ${d.val === currentDeckVal ? 'selected' : ''}>${d.label}</option>`
+      ).join('');
+    }
 
     function setUILang(lang) {
       uiLang = lang;
       document.documentElement.lang = lang;
       const t = UI_TEXT[lang];
+      document.title = t.pageTitle;
 
-      // Toggle VI / EN button styles
       document.querySelectorAll('.lang-btn-vi').forEach(b => {
         b.className = lang === 'vi'
           ? 'lang-btn-vi px-2.5 py-1 text-xs rounded-md font-bold bg-emerald-500 text-slate-950 transition cursor-pointer'
@@ -419,16 +538,15 @@
           : 'lang-btn-en px-2.5 py-1 text-xs rounded-md font-medium text-slate-300 hover:text-white transition cursor-pointer';
       });
 
-      // Update static UI labels
       document.getElementById('uiAppTitle').textContent = t.appTitle;
       document.getElementById('uiAppSubtitle').textContent = t.appSubtitle;
-      document.getElementById('voiceBtnHochdeutsch').textContent = t.voiceHoch;
-      document.getElementById('voiceBtnRostock').textContent = t.voiceRostock;
       document.getElementById('uiTestBtn').textContent = t.testBtn;
+      document.getElementById('testVoiceBtn').title = t.testBtnTitle;
       document.getElementById('speedSlow').textContent = t.speedSlow;
       document.getElementById('speedNormal').textContent = t.speedNormal;
       document.getElementById('speedFast').textContent = t.speedFast;
       document.getElementById('uiStopBtn').textContent = t.stopBtn;
+      document.getElementById('uiStopActionBtn').title = t.stopBtnTitle;
 
       document.getElementById('uiTabVocab').textContent = t.tabVocab;
       document.getElementById('uiTabSentences').textContent = t.tabSentences;
@@ -453,6 +571,7 @@
       document.getElementById('uiDlgPanelDesc').textContent = t.dlgPanelDesc;
       document.getElementById('uiRole1Label').textContent = t.role1Label;
       document.getElementById('uiRole2Label').textContent = t.role2Label;
+      document.getElementById('uiSwapBtn').textContent = t.swapBtn;
 
       document.getElementById('uiFcDeckLabel').textContent = t.fcDeckLabel;
       document.getElementById('uiFcShuffleBtn').textContent = t.fcShuffle;
@@ -466,18 +585,14 @@
       document.getElementById('uiFcPrevBtn').textContent = t.fcPrev;
       document.getElementById('uiFcNextBtn').textContent = t.fcNext;
 
+      refreshAllDropdowns();
       renderVocab();
       renderSentences();
       renderDialogues();
       updateFlashcardUI();
     }
 
-    // ==================== HỆ THỐNG PHÁT 2 GIỌNG (CHUẨN ĐỨC & VÙNG ROSTOCK) ====================
-    let globalVoice = 'hochdeutsch';
-    let workerVoice = 'hochdeutsch';
-    let partnerVoice = 'rostock';
-    let playbackSpeed = 1.0;
-
+    // ==================== HỆ THỐNG PHÁT 6 GIỌNG + DỰ PHÒNG THÔNG MINH ====================
     let activeAudio = new Audio();
     let currentActiveBtn = null;
     let isPlayingDialogue = false;
@@ -488,21 +603,12 @@
       t.textContent = msg;
       t.classList.remove('opacity-0');
       clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => t.classList.add('opacity-0'), 3800);
+      window._toastTimer = setTimeout(() => t.classList.add('opacity-0'), 4000);
     }
 
-    function setGlobalVoice(v) {
-      globalVoice = v;
+    function onGlobalVoiceChange() {
+      globalVoice = document.getElementById('globalVoiceSelect').value;
       stopAudio();
-      const btnH = document.getElementById('voiceBtnHochdeutsch');
-      const btnR = document.getElementById('voiceBtnRostock');
-      if (v === 'hochdeutsch') {
-        btnH.className = 'px-2.5 py-1 text-xs rounded-md font-semibold bg-blue-600 text-white transition cursor-pointer';
-        btnR.className = 'px-2.5 py-1 text-xs rounded-md font-medium text-slate-300 hover:text-white transition cursor-pointer';
-      } else {
-        btnR.className = 'px-2.5 py-1 text-xs rounded-md font-semibold bg-amber-500 text-slate-950 transition cursor-pointer';
-        btnH.className = 'px-2.5 py-1 text-xs rounded-md font-medium text-slate-300 hover:text-white transition cursor-pointer';
-      }
     }
 
     function onDialogueRoleChange() {
@@ -510,6 +616,17 @@
       partnerVoice = document.getElementById('rolePartnerVoice').value;
       stopAudio();
       renderDialogues();
+    }
+
+    function swapDialogueVoices() {
+      const tmp = workerVoice;
+      workerVoice = partnerVoice;
+      partnerVoice = tmp;
+      document.getElementById('roleWorkerVoice').value = workerVoice;
+      document.getElementById('rolePartnerVoice').value = partnerVoice;
+      stopAudio();
+      renderDialogues();
+      showToast(UI_TEXT[uiLang].toastSwapped);
     }
 
     function setSpeed(rate) {
@@ -570,60 +687,86 @@
       }
     }
 
-    function playMp3File(relativePath, fallbackText, btnEl, onDone) {
+    // Thử theo chuỗi ưu tiên:
+    // 1. audio/<voiceKey>/<fileBase>.mp3
+    // 2. audio/<voiceKey>/<fileBase>.wav
+    // 3. audio/<fallbackEdge>/<fileBase>.mp3 (nếu giọng mới chưa chạy script tạo)
+    // 4. Trình duyệt Web Speech API
+    function playAudioSmart(voiceKey, fileBase, fallbackText, btnEl, onDone) {
       if (btnEl) {
         clearBtnHighlight();
         currentActiveBtn = btnEl;
         btnEl.classList.add('speaking-active');
       }
 
-      activeAudio.pause();
-      activeAudio.src = relativePath;
-      activeAudio.playbackRate = playbackSpeed;
-
-      activeAudio.onended = () => {
-        clearBtnHighlight();
-        if (onDone) onDone();
-      };
-
-      activeAudio.onerror = () => {
-        fallbackBrowserTTS(fallbackText, btnEl, onDone);
-      };
-
-      const p = activeAudio.play();
-      if (p !== undefined) {
-        p.catch(() => {
-          fallbackBrowserTTS(fallbackText, btnEl, onDone);
-        });
+      const vMeta = VOICE_CATALOG.find(v => v.key === voiceKey);
+      const candidates = [
+        { url: `audio/${voiceKey}/${fileBase}.mp3`, isFallback: false },
+        { url: `audio/${voiceKey}/${fileBase}.wav`, isFallback: false }
+      ];
+      if (vMeta && vMeta.fallback_edge) {
+        candidates.push({ url: `audio/${vMeta.fallback_edge}/${fileBase}.mp3`, isFallback: true });
       }
+
+      let idx = 0;
+      function tryCandidate() {
+        if (idx >= candidates.length) {
+          fallbackBrowserTTS(fallbackText, btnEl, onDone);
+          return;
+        }
+        const cand = candidates[idx++];
+        activeAudio.pause();
+        activeAudio.src = cand.url;
+        activeAudio.playbackRate = playbackSpeed;
+
+        activeAudio.onended = () => {
+          clearBtnHighlight();
+          if (onDone) onDone();
+        };
+
+        activeAudio.onerror = () => {
+          tryCandidate();
+        };
+
+        const p = activeAudio.play();
+        if (p !== undefined) {
+          p.then(() => {
+            if (cand.isFallback && !window._warnedFallbackOnce) {
+              window._warnedFallbackOnce = true;
+              showToast(UI_TEXT[uiLang].toastFallbackEdge);
+            }
+          }).catch(() => {
+            tryCandidate();
+          });
+        }
+      }
+
+      tryCandidate();
     }
 
     function testSelectedVoice(btnEl) {
       dialogueAbort = true;
       isPlayingDialogue = false;
-      const samples = {
-        hochdeutsch: "Guten Tag! Hier sprechen wir klares Hochdeutsch für die Arbeit.",
-        rostock: "Moin! Ich bin Meister Klaus aus Rostock. Willkommen bei BG Wind."
-      };
-      playMp3File(`audio/${globalVoice}/sample.mp3`, samples[globalVoice], btnEl);
+      const vMeta = VOICE_CATALOG.find(v => v.key === globalVoice);
+      playAudioSmart(globalVoice, 'sample', vMeta ? vMeta.sample : 'Guten Tag!', btnEl);
     }
 
     function playVocabWord(id, btnEl) {
       dialogueAbort = true;
       const item = VOCAB_DATA.find(x => x.id === id);
-      playMp3File(`audio/${globalVoice}/vocab_${id}_word.mp3`, item.speak, btnEl);
+      playAudioSmart(globalVoice, `vocab_${id}_word`, item.speak, btnEl);
     }
 
     function playVocabEx(id, btnEl) {
       dialogueAbort = true;
       const item = VOCAB_DATA.find(x => x.id === id);
-      playMp3File(`audio/${globalVoice}/vocab_${id}_ex.mp3`, item.ex_de, btnEl);
+      playAudioSmart(globalVoice, `vocab_${id}_ex`, item.ex_de, btnEl);
     }
 
     function playSentence(id, btnEl) {
       dialogueAbort = true;
       const item = SENTENCES_DATA.find(x => x.id === id);
-      playMp3File(`audio/${globalVoice}/sent_${id}.mp3`, item.de.replace(/ \/ /g, ', '), btnEl);
+      playAudioSmart(globalVoice, `sent_${id}`, item.de.replace(/ \/ /g, ', '), btnEl);
     }
 
     function getVoiceForRole(role) {
@@ -634,7 +777,7 @@
       dialogueAbort = true;
       isPlayingDialogue = false;
       const vKey = getVoiceForRole(role);
-      playMp3File(`audio/${vKey}/${lineId}.mp3`, text, btnEl);
+      playAudioSmart(vKey, lineId, text, btnEl);
     }
 
     function playFullDialogue(dlgId, playAllBtn) {
@@ -664,7 +807,7 @@
           rowEl.classList.add('bg-amber-50', 'border-amber-300');
           rowEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-        playMp3File(`audio/${vKey}/${line.id}.mp3`, line.de, playAllBtn, () => {
+        playAudioSmart(vKey, line.id, line.de, playAllBtn, () => {
           idx++;
           setTimeout(nextLine, 260);
         });
@@ -734,7 +877,7 @@
                   </div>
                   <div class="ipa-font text-xs text-slate-500 mt-1">${item.ipa}</div>
                 </div>
-                <button onclick="playVocabWord(${item.id}, this)" class="w-9 h-9 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white flex items-center justify-center shrink-0 transition border border-blue-200/60 cursor-pointer">
+                <button onclick="playVocabWord(${item.id}, this)" title="${t.playWordTitle}" class="w-9 h-9 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white flex items-center justify-center shrink-0 transition border border-blue-200/60 cursor-pointer">
                   <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                 </button>
               </div>
@@ -749,7 +892,7 @@
                 <div class="font-semibold text-slate-800 leading-relaxed">${item.ex_de}</div>
                 <div class="text-slate-600 italic mt-0.5">${exTrans}</div>
               </div>
-              <button onclick="playVocabEx(${item.id}, this)" class="w-8 h-8 rounded-lg bg-white hover:bg-amber-500 text-amber-600 hover:text-white flex items-center justify-center shrink-0 transition border border-amber-200 shadow-xs cursor-pointer">
+              <button onclick="playVocabEx(${item.id}, this)" title="${t.playExTitle}" class="w-8 h-8 rounded-lg bg-white hover:bg-amber-500 text-amber-600 hover:text-white flex items-center justify-center shrink-0 transition border border-amber-200 shadow-xs cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
               </button>
             </div>
@@ -794,7 +937,7 @@
               <div class="text-sm sm:text-base font-bold text-slate-900">${s.de}</div>
               <div class="text-xs sm:text-sm text-slate-600 italic">${trans}</div>
             </div>
-            <button onclick="playSentence(${s.id}, this)" class="w-10 h-10 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white flex items-center justify-center shrink-0 transition border border-blue-200/60 cursor-pointer">
+            <button onclick="playSentence(${s.id}, this)" title="${t.playSentTitle}" class="w-10 h-10 rounded-xl bg-blue-50 hover:bg-blue-600 text-blue-600 hover:text-white flex items-center justify-center shrink-0 transition border border-blue-200/60 cursor-pointer">
               <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
             </button>
           </div>
@@ -802,7 +945,7 @@
       }).join('');
     }
 
-    // ==================== RENDER HỘI THOẠI TÙY CHỌN GIỌNG ====================
+    // ==================== RENDER HỘI THOẠI TÙY CHỌN 6 GIỌNG ====================
     function renderDialogues() {
       const t = UI_TEXT[uiLang];
       const container = document.getElementById('dialoguesContainer');
@@ -824,7 +967,10 @@
             <div class="p-4 sm:p-5 space-y-2.5">
               ${dlg.lines.map(line => {
                 const isWorker = line.role === 'worker';
-                const assignedVoice = getVoiceForRole(line.role);
+                const assignedVoiceKey = getVoiceForRole(line.role);
+                const vMeta = VOICE_CATALOG.find(v => v.key === assignedVoiceKey);
+                const voiceTag = vMeta ? (uiLang === 'vi' ? vMeta.short_vi : vMeta.short_en) : assignedVoiceKey;
+                const speakerDisplay = t.speakerNames[line.role] || line.speaker;
                 const badgeClass = isWorker
                   ? 'bg-blue-100 text-blue-800 border-blue-200'
                   : 'bg-amber-100 text-amber-900 border-amber-200';
@@ -833,13 +979,13 @@
                   <div id="dlg-row-${line.id}" class="dlg-line-row p-3 rounded-xl border border-slate-100 bg-slate-50/70 hover:bg-slate-50 transition flex items-start justify-between gap-3">
                     <div class="space-y-1">
                       <div class="flex flex-wrap items-center gap-1.5">
-                        <span class="inline-block text-[11px] font-bold px-2 py-0.5 rounded border ${badgeClass}">${line.speaker}</span>
-                        <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-200/70 text-slate-600">${t.voiceBadge[assignedVoice]}</span>
+                        <span class="inline-block text-[11px] font-bold px-2 py-0.5 rounded border ${badgeClass}">${speakerDisplay}</span>
+                        <span class="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-200/70 text-slate-600">${voiceTag}</span>
                       </div>
                       <div class="text-sm sm:text-base font-semibold text-slate-900">${line.de}</div>
                       <div class="text-xs sm:text-sm text-slate-600 italic">${trans}</div>
                     </div>
-                    <button onclick="playDialogueLine('${line.id}', '${line.role}', '${line.de.replace(/'/g, "\\'")}', this)" class="w-9 h-9 rounded-xl bg-white hover:bg-blue-600 text-blue-600 hover:text-white flex items-center justify-center shrink-0 transition border border-slate-200 shadow-xs cursor-pointer">
+                    <button onclick="playDialogueLine('${line.id}', '${line.role}', '${line.de.replace(/'/g, "\\'")}', this)" title="${t.playLineTitle}" class="w-9 h-9 rounded-xl bg-white hover:bg-blue-600 text-blue-600 hover:text-white flex items-center justify-center shrink-0 transition border border-slate-200 shadow-xs cursor-pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                     </button>
                   </div>
@@ -857,7 +1003,7 @@
     let isFlipped = false;
 
     function initFlashcards() {
-      const val = document.getElementById('fcDeckSelect').value;
+      const val = document.getElementById('fcDeckSelect').value || 'all_vocab';
       if (val === 'all_vocab') {
         fcDeck = VOCAB_DATA.map(v => ({ ...v, kind: 'vocab' }));
       } else if (val === 'all_sent') {
@@ -901,6 +1047,7 @@
     }
 
     function updateFlashcardUI() {
+      if (!fcDeck.length) return;
       const t = UI_TEXT[uiLang];
       document.getElementById('fcInner').classList.remove('rotate-y-180');
       const card = fcDeck[fcIndex];
@@ -944,7 +1091,8 @@
       }
     }
 
-    // Khởi tạo giao diện
+    // Khởi tạo giao diện ban đầu
+    refreshAllDropdowns();
     renderVocab();
     renderSentences();
     renderDialogues();
